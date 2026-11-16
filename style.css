@@ -273,18 +273,9 @@ a {
   color: rgba(255, 255, 255, 0.6);
 }
 
-.fight-btn.small {
-  font-size: 10px;
-  padding: 12px 18px;
-  font-family: var(--font-mono);
-  font-weight: 700;
-  letter-spacing: 0.14em;
-}
-
 #view-form.ready .fight-btn,
 .view-result .fight-btn,
-.view-error .fight-btn,
-.view-battledex .fight-btn {
+.view-error .fight-btn {
   border-color: var(--white);
   background: linear-gradient(180deg, var(--pink), var(--pink-dark));
   color: var(--white);
@@ -293,8 +284,7 @@ a {
 
 #view-form.ready .fight-btn:hover,
 .view-result .fight-btn:hover,
-.view-error .fight-btn:hover,
-.view-battledex .fight-btn:hover {
+.view-error .fight-btn:hover {
   background: linear-gradient(180deg, #ff2b78, #c81254);
 }
 
@@ -603,242 +593,6 @@ a {
   max-width: 300px;
 }
 
-/* ---------- BattleDex view ---------- */
-
-.view-battledex {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.dex-head {
-  display: flex;
-  align-items: flex-end;
-  justify-content: space-between;
-  gap: 16px;
-  flex-wrap: wrap;
-}
-
-.roster-count {
-  margin-top: 14px;
-  font: 700 10px var(--font-mono);
-  color: var(--green);
-  letter-spacing: 0.24em;
-}
-
-.dex-actions {
-  display: flex;
-  justify-content: center;
-  gap: 11px;
-  margin-top: 20px;
-}
-
-.ghost-btn {
-  border: 2px solid var(--cyan);
-  background: none;
-  padding: 12px 18px;
-  font: 700 10px var(--font-mono);
-  color: var(--cyan);
-  letter-spacing: 0.14em;
-  box-shadow: 0 0 16px rgba(155, 249, 255, 0.3);
-  cursor: pointer;
-}
-
-.ghost-btn:hover {
-  background: var(--cyan);
-  color: #000;
-}
-
-.battledex-grid {
-  margin-top: 24px;
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 14px;
-}
-
-.battledex-card {
-  position: relative;
-  border: 2px solid var(--tint, var(--cyan));
-  background: rgba(255, 255, 255, 0.04);
-  padding: 9px;
-  box-shadow: 0 0 22px rgba(155, 249, 255, 0.15), inset 0 0 24px rgba(76, 15, 251, 0.18);
-}
-
-.battledex-card-delete {
-  position: absolute;
-  top: -10px;
-  right: -10px;
-  width: 25px;
-  height: 25px;
-  border: 2px solid var(--pink);
-  background: #08000f;
-  color: var(--pink);
-  font: 700 10px var(--font-mono);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 2;
-  padding: 0;
-  cursor: pointer;
-}
-
-.battledex-card-delete:hover {
-  background: var(--pink);
-  color: var(--white);
-}
-
-.battledex-card img {
-  width: 100%;
-  aspect-ratio: 1;
-  object-fit: cover;
-  background: #0a0a13;
-}
-
-.battledex-card p {
-  margin: 9px 0 0;
-  font: 700 10px / 1.45 var(--font-mono);
-  color: var(--white);
-  letter-spacing: 0.04em;
-  word-break: break-word;
-}
-
-.battledex-card-no {
-  margin-top: 4px;
-  font: 700 8px var(--font-mono);
-  color: var(--tint, var(--cyan));
-  letter-spacing: 0.16em;
-}
-
-.battledex-empty {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 24px;
-  text-align: center;
-  padding: 26px;
-}
-
-.battledex-empty[hidden] {
-  display: none;
-}
-
-.empty-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 68px);
-  gap: 12px;
-}
-
-.empty-grid span {
-  aspect-ratio: 1;
-  border: 2px dashed rgba(155, 249, 255, 0.28);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font: 400 16px var(--font-pixel);
-  color: rgba(155, 249, 255, 0.35);
-}
-
-.empty-heading {
-  font: 400 13px / 1.7 var(--font-pixel);
-  color: var(--cyan);
-  text-shadow: 0 0 22px rgba(155, 249, 255, 0.55);
-}
-
-.battledex-empty p {
-  margin-top: 16px;
-  font: 400 12.5px / 1.6 var(--font-body);
-  color: rgba(255, 255, 255, 0.6);
-  max-width: 280px;
-}
-
-.battledex-empty .fight-btn {
-  width: 100%;
-  max-width: 300px;
-}
-
-.clear-btn {
-  margin-top: 32px;
-  align-self: center;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  background: none;
-  padding: 12px 24px;
-  font: 700 9px var(--font-mono);
-  color: rgba(255, 255, 255, 0.42);
-  letter-spacing: 0.2em;
-  cursor: pointer;
-}
-
-.clear-btn:hover {
-  border-color: var(--pink);
-  color: var(--pink);
-}
-
-/* ---------- Confirm dialog ---------- */
-
-.confirm-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(5, 0, 12, 0.82);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px;
-  z-index: 50;
-}
-
-.confirm-overlay[hidden] {
-  display: none;
-}
-
-.confirm-box {
-  width: 100%;
-  max-width: 340px;
-  border: 2px solid var(--pink);
-  background: radial-gradient(125% 95% at 50% -10%, #24084f 0%, #0a0016 58%, #000 100%);
-  box-shadow: 0 0 60px rgba(245, 23, 103, 0.5), inset 0 0 34px rgba(76, 15, 251, 0.25);
-  padding: 26px 22px;
-  text-align: center;
-}
-
-.confirm-heading {
-  font: 400 15px / 1.6 var(--font-pixel);
-  color: var(--white);
-  text-shadow: 3px 0 0 var(--pink), -3px 0 0 var(--purple);
-}
-
-.confirm-box p {
-  margin: 14px 0 0;
-  font: 400 12.5px / 1.6 var(--font-body);
-  color: rgba(255, 255, 255, 0.72);
-}
-
-.confirm-actions {
-  margin-top: 22px;
-  display: flex;
-  gap: 11px;
-}
-
-.confirm-actions button {
-  flex: 1;
-}
-
-.confirm-delete-btn {
-  border: 2px solid var(--white);
-  background: linear-gradient(180deg, var(--pink), var(--pink-dark));
-  color: var(--white);
-  font: 700 10px var(--font-mono);
-  letter-spacing: 0.12em;
-  padding: 12px;
-  cursor: pointer;
-  box-shadow: 0 0 30px rgba(245, 23, 103, 0.6);
-}
-
-.confirm-delete-btn:hover {
-  background: linear-gradient(180deg, #ff2b78, #c81254);
-}
-
 /* ---------- Footer ---------- */
 
 .screen-footer {
@@ -906,9 +660,5 @@ a {
 
   .fighter-slot {
     max-width: 300px;
-  }
-
-  .dex-head {
-    align-items: flex-end;
   }
 }

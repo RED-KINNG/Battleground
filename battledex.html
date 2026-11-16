@@ -3,52 +3,60 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#08080a" />
   <title>BattleDex — Battleground</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="battledex.css" />
 </head>
 <body>
-  <div class="cabinet">
-    <div class="screen">
-      <header class="screen-header">
-        <div class="logo">BATTLEGROUND</div>
-        <span class="pill-link is-current">BATTLEDEX</span>
-      </header>
+  <header class="dex-topbar">
+    <a class="dex-wordmark" href="index.html">Battle<span>ground</span></a>
+    <nav class="dex-nav" aria-label="Primary">
+      <a href="index.html">Arena</a>
+      <a href="battledex.html" aria-current="page">BattleDex</a>
+    </nav>
+  </header>
 
-      <main class="screen-body">
-        <section id="view-battledex" class="view view-battledex">
-          <div class="dex-head">
-            <h1 class="pixel-title">BATTLEDEX</h1>
-            <div class="roster-count"><span id="roster-count-text">0 ON ROSTER</span></div>
-          </div>
-          <div class="dex-actions">
-            <button id="battledex-back-to-fight" type="button" class="ghost-btn" hidden>LAST FIGHT</button>
-            <a id="battledex-new-fight" href="index.html" class="fight-btn small">NEW FIGHT</a>
-          </div>
-          <div id="battledex-grid" class="battledex-grid"></div>
-          <div id="battledex-empty" class="battledex-empty" hidden>
-            <div class="empty-grid"><span></span><span></span><span></span><span>?</span></div>
-            <div class="empty-heading">NO FIGHTERS<br />SAVED YET</div>
-            <p>Win a fight and save the art to start your roster.</p>
-          </div>
-          <button id="battledex-clear" type="button" class="clear-btn" hidden>CLEAR ALL</button>
-        </section>
-      </main>
+  <main class="dex-main">
+    <section id="view-battledex" class="view-battledex">
+      <div class="dex-hero">
+        <div>
+          <p class="dex-eyebrow">The Collection</p>
+          <h1 class="dex-title">Battle<em>Dex</em></h1>
+          <p class="dex-count" id="roster-count-text"><strong>0</strong> fighters on roster</p>
+        </div>
+        <div class="dex-actions">
+          <button id="battledex-back-to-fight" type="button" class="btn btn-ghost" hidden>Last fight</button>
+          <a id="battledex-new-fight" href="index.html" class="btn btn-primary">New fight</a>
+        </div>
+      </div>
 
-      <footer class="screen-footer">CAB NO. 0417 — ARENA ONLINE</footer>
-      <div class="crt-overlay" aria-hidden="true"></div>
-    </div>
-  </div>
+      <div id="battledex-grid" class="battledex-grid"></div>
+
+      <div id="battledex-empty" class="battledex-empty" hidden>
+        <div class="empty-mark" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M17.5 14v7M14 17.5h7"/></svg>
+        </div>
+        <h2 class="empty-heading">Your collection is empty</h2>
+        <p>Win a fight and save the art to start building your roster.</p>
+        <a href="index.html" class="btn btn-primary">Start a fight</a>
+      </div>
+
+      <div class="dex-footer-actions">
+        <button id="battledex-clear" type="button" class="btn btn-text" hidden>Clear collection</button>
+      </div>
+    </section>
+  </main>
 
   <div id="confirm-overlay" class="confirm-overlay" hidden>
-    <div class="confirm-box">
-      <div class="confirm-heading">CLEAR ROSTER?</div>
-      <p>This deletes every saved fighter. This can't be undone.</p>
+    <div class="confirm-box" role="alertdialog" aria-modal="true" aria-labelledby="confirm-heading" aria-describedby="confirm-desc">
+      <h2 id="confirm-heading" class="confirm-heading">Clear your collection?</h2>
+      <p id="confirm-desc">Every saved fighter will be permanently deleted. This can't be undone.</p>
       <div class="confirm-actions">
-        <button id="confirm-cancel" type="button" class="ghost-btn">CANCEL</button>
-        <button id="confirm-delete" type="button" class="confirm-delete-btn">DELETE ALL</button>
+        <button id="confirm-cancel" type="button" class="btn btn-ghost">Cancel</button>
+        <button id="confirm-delete" type="button" class="btn btn-danger">Delete all</button>
       </div>
     </div>
   </div>
