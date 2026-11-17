@@ -1,0 +1,15 @@
+# vercel.json serves the project root as static files, so anything not
+# listed here is publicly reachable on the deployed site.
+
+# Secrets and local tooling
+.env*
+.vercel
+.claude
+.impeccable
+
+# Internal docs (README.md stays out too; battleground-preview.jpg is only used by it)
+CLAUDE.md
+project-brief.md
+project-build.md
+README.md
+battleground-preview.jpg

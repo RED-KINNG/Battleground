@@ -59,8 +59,23 @@ function setFighterOutcome(slotId, nameId, label, isWinner) {
   document.getElementById(nameId).textContent = label;
 }
 
-function showResult({ winner, reasoning, imageA, imageB, fighterA, fighterB }) {
-  saveLastFight({ winner, reasoning, imageA, imageB, fighterA, fighterB });
+// The fight on screen, kept in memory so the result view and Save buttons never depend on localStorage.
+let currentFight = null;
+
+// Best effort: two full-size PNG data URIs can exceed the ~5MB localStorage quota.
+// If they don't fit, the result still shows; only battledex.html's "Last fight" link loses it.
+function rememberLastFight(fight) {
+  try {
+    saveLastFight(fight);
+  } catch (err) {
+    console.warn('Could not store last fight:', err);
+    try { localStorage.removeItem(LAST_FIGHT_KEY); } catch {}
+  }
+}
+
+function showResult(fight) {
+  const { winner, reasoning, imageA, imageB, fighterA, fighterB } = fight;
+  currentFight = fight;
   const aWins = winner === fighterA;
   document.getElementById('result-winner').textContent = `${winner} wins!`;
   document.getElementById('result-reasoning').textContent = reasoning;
@@ -80,6 +95,8 @@ function showError(message) {
 
 // Stage 3: real verdict + art via /api/fight.
 async function runFight(fighterA, fighterB) {
+  document.getElementById('loading-name-a').textContent = fighterA;
+  document.getElementById('loading-name-b').textContent = fighterB;
   showView('loading');
   let res;
   try {
@@ -100,14 +117,16 @@ async function runFight(fighterA, fighterB) {
     return;
   }
 
-  showResult({
+  const fight = {
     winner: data.winner,
     reasoning: data.reasoning,
     imageA: data.imageA,
     imageB: data.imageB,
     fighterA,
     fighterB,
-  });
+  };
+  showResult(fight);
+  rememberLastFight(fight);
 }
 
 document.getElementById('fight-form').addEventListener('submit', (e) => {
@@ -146,14 +165,12 @@ async function handleSave(button, label, image) {
 }
 
 document.getElementById('save-fighter-a').addEventListener('click', (e) => {
-  const lastFight = loadLastFight();
-  if (!lastFight) return;
-  handleSave(e.target, lastFight.fighterA, lastFight.imageA);
+  if (!currentFight) return;
+  handleSave(e.currentTarget, currentFight.fighterA, currentFight.imageA);
 });
 document.getElementById('save-fighter-b').addEventListener('click', (e) => {
-  const lastFight = loadLastFight();
-  if (!lastFight) return;
-  handleSave(e.target, lastFight.fighterB, lastFight.imageB);
+  if (!currentFight) return;
+  handleSave(e.currentTarget, currentFight.fighterB, currentFight.imageB);
 });
 
 // Arriving from battledex.html's "Back to last fight" link (?view=result).

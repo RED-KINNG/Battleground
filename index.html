@@ -3,86 +3,173 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#07060f" />
   <title>Battleground</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Silkscreen:wght@400;700&family=Plus+Jakarta+Sans:wght@400;500;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="theme.css" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div class="cabinet">
-    <div class="screen">
-      <header class="screen-header">
-        <div class="logo">BATTLEGROUND</div>
-        <a id="nav-battledex" class="pill-link" href="battledex.html">BATTLEDEX</a>
-      </header>
+  <div class="neon-floor" aria-hidden="true"></div>
 
-      <main class="screen-body">
-        <section id="view-form" class="view view-form">
-          <div class="title-block">
-            <h1 class="pixel-title">BATTLE<br />GROUND</h1>
-            <div class="tagline" id="form-tagline">SELECT YOUR FIGHTERS</div>
-          </div>
-          <form id="fight-form" novalidate>
+  <header class="topbar">
+    <a class="wordmark" href="index.html">BATTLEGROUND</a>
+    <nav class="nav" aria-label="Main">
+      <a class="chamfer" href="index.html" aria-current="page">ARENA</a>
+      <a class="chamfer" href="battledex.html">BATTLEDEX</a>
+    </nav>
+  </header>
+
+  <main class="arena">
+    <section id="view-form" class="view view-form">
+      <div class="title-block">
+        <span class="eyebrow">◢ <span id="form-tagline">SELECT YOUR FIGHTERS</span></span>
+        <h1 class="game-title">BATTLEGROUND</h1>
+      </div>
+
+      <form id="fight-form" novalidate>
+        <div class="player-card p1 chamfer">
+          <div class="player-card-inner chamfer">
+            <div class="portrait" aria-hidden="true">
+              <span class="player-badge">1P</span>
+              <span class="portrait-q">?</span>
+            </div>
             <div class="field">
-              <label for="fighter-a">&gt; FIGHTER A</label>
-              <input type="text" id="fighter-a" name="fighterA" placeholder="e.g. a grizzly bear" />
+              <label for="fighter-a">FIGHTER A</label>
+              <input type="text" id="fighter-a" name="fighterA" placeholder="e.g. a grizzly bear" autocomplete="off" />
             </div>
-            <div class="vs-divider"><span></span><b>VS</b><span></span></div>
+          </div>
+        </div>
+
+        <div class="vs-divider" aria-hidden="true">
+          <span class="vs-line"></span><span class="vs-diamond"></span>
+          <b>VS</b>
+          <span class="vs-diamond"></span><span class="vs-line"></span>
+        </div>
+
+        <div class="player-card p2 chamfer">
+          <div class="player-card-inner chamfer">
+            <div class="portrait" aria-hidden="true">
+              <span class="player-badge">2P</span>
+              <span class="portrait-q">?</span>
+            </div>
             <div class="field">
-              <label for="fighter-b">&gt; FIGHTER B</label>
-              <input type="text" id="fighter-b" name="fighterB" placeholder="e.g. 10 cows" />
-            </div>
-            <button type="submit" class="fight-btn">FIGHT!</button>
-            <div class="hint" id="form-hint">BOTH SLOTS REQUIRED</div>
-          </form>
-        </section>
-
-        <section id="view-loading" class="view view-loading" hidden>
-          <div class="vs-spinner" aria-hidden="true"><span>VS</span></div>
-          <p id="loading-message" class="loading-text">Fighting...</p>
-          <div class="verdict-pending">VERDICT PENDING</div>
-          <div class="loading-bar"><div class="loading-bar-fill"></div></div>
-          <div class="loading-labels"><span>VERDICT</span><span>ART A</span><span>ART B</span></div>
-        </section>
-
-        <section id="view-result" class="view view-result" hidden>
-          <div class="ruling-tag">JUDGE HAS RULED</div>
-          <h2 id="result-winner" class="pixel-title"></h2>
-          <div class="fighters">
-            <div class="fighter-slot" id="slot-a">
-              <div class="fighter-tag"></div>
-              <img id="result-image-a" src="" alt="Fighter A" />
-              <div class="fighter-name" id="name-a"></div>
-              <button id="save-fighter-a" class="save-btn" type="button">SAVE TO DEX</button>
-            </div>
-            <div class="fighter-slot" id="slot-b">
-              <div class="fighter-tag"></div>
-              <img id="result-image-b" src="" alt="Fighter B" />
-              <div class="fighter-name" id="name-b"></div>
-              <button id="save-fighter-b" class="save-btn" type="button">SAVE TO DEX</button>
+              <label for="fighter-b">FIGHTER B</label>
+              <input type="text" id="fighter-b" name="fighterB" placeholder="e.g. 10 cows" autocomplete="off" />
             </div>
           </div>
-          <div class="ruling-box">
-            <div class="ruling-label">THE RULING</div>
-            <p id="result-reasoning"></p>
-          </div>
-          <button id="result-again" class="fight-btn">FIGHT AGAIN</button>
-        </section>
+        </div>
 
-        <section id="view-error" class="view view-error" hidden>
-          <div class="error-icon">!</div>
+        <button type="submit" class="btn fight-btn chamfer">
+          <svg width="16" height="18" viewBox="0 0 16 18" aria-hidden="true"><path d="M0 0h4v2h4v2h4v2h4v6h-4v2H8v2H4v2H0z" fill="currentColor"></path></svg>
+          FIGHT!
+        </button>
+        <div class="hint" id="form-hint">BOTH SLOTS REQUIRED</div>
+      </form>
+    </section>
+
+    <section id="view-loading" class="view view-loading" hidden>
+      <p class="loading-headline blink">NOW LOADING</p>
+
+      <div class="loading-cards">
+        <div class="load-card p1">
+          <div class="load-card-inner">
+            <div class="portrait portrait-lg" aria-hidden="true">
+              <span class="portrait-q">?</span>
+              <span class="scan-line"></span>
+            </div>
+            <div class="load-card-label">
+              <span class="player-tag">1P</span>
+              <span class="load-card-name" id="loading-name-a"></span>
+            </div>
+          </div>
+        </div>
+        <div class="load-card p2">
+          <div class="load-card-inner">
+            <div class="portrait portrait-lg" aria-hidden="true">
+              <span class="portrait-q">?</span>
+              <span class="scan-line"></span>
+            </div>
+            <div class="load-card-label">
+              <span class="player-tag">2P</span>
+              <span class="load-card-name" id="loading-name-b"></span>
+            </div>
+          </div>
+        </div>
+        <div class="vs-badge" aria-hidden="true"><span>VS</span></div>
+      </div>
+
+      <div class="progress">
+        <div class="progress-label"><span>GENERATING_BATTLE</span><span class="blink">...</span></div>
+        <div class="seg-bar" aria-hidden="true"></div>
+      </div>
+
+      <div class="terminal">
+        <span class="terminal-title">AI_JUDGE.EXE</span>
+        <p class="terminal-line" aria-live="polite">&gt; <span id="loading-message">Fighting...</span><span class="cursor" aria-hidden="true"></span></p>
+      </div>
+    </section>
+
+    <section id="view-result" class="view view-result" hidden>
+      <div class="result-head">
+        <span class="eyebrow">◢ JUDGE HAS RULED</span>
+        <h2 id="result-winner" class="result-title"></h2>
+      </div>
+
+      <div class="fighters">
+        <div class="fighter-slot p1" id="slot-a">
+          <div class="art-glow">
+            <div class="art-frame chamfer">
+              <div class="art-inner chamfer">
+                <img id="result-image-a" src="" alt="Fighter A" />
+                <div class="fighter-tag"></div>
+                <span class="player-tag">1P</span>
+              </div>
+            </div>
+          </div>
+          <div class="fighter-name" id="name-a"></div>
+          <button id="save-fighter-a" class="save-btn chamfer" type="button">SAVE TO DEX</button>
+        </div>
+        <div class="fighter-slot p2" id="slot-b">
+          <div class="art-glow">
+            <div class="art-frame chamfer">
+              <div class="art-inner chamfer">
+                <img id="result-image-b" src="" alt="Fighter B" />
+                <div class="fighter-tag"></div>
+                <span class="player-tag">2P</span>
+              </div>
+            </div>
+          </div>
+          <div class="fighter-name" id="name-b"></div>
+          <button id="save-fighter-b" class="save-btn chamfer" type="button">SAVE TO DEX</button>
+        </div>
+      </div>
+
+      <div class="ruling-box">
+        <div class="ruling-label">AI_JUDGE.LOG</div>
+        <p id="result-reasoning"></p>
+      </div>
+
+      <button id="result-again" class="btn btn-primary chamfer">NEW MATCH &gt;&gt;</button>
+    </section>
+
+    <section id="view-error" class="view view-error" hidden>
+      <div class="error-panel chamfer">
+        <div class="error-inner chamfer">
+          <div class="error-icon blink" aria-hidden="true">!</div>
           <div class="error-heading">THE REF THREW<br />A FLAG</div>
           <p id="error-message">The ref threw a flag. Something went sideways.</p>
           <div class="error-code">ERR — VERDICT NOT RETURNED</div>
-          <button id="error-again" class="fight-btn">BACK TO THE ARENA</button>
-        </section>
-      </main>
+        </div>
+      </div>
+      <button id="error-again" class="btn btn-primary chamfer">&lt;&lt; BACK TO THE ARENA</button>
+    </section>
+  </main>
 
-      <footer class="screen-footer">CAB NO. 0417 — ARENA ONLINE</footer>
-      <div class="crt-overlay" aria-hidden="true"></div>
-    </div>
-  </div>
+  <footer class="footer">CAB NO. 0417 — ARENA ONLINE</footer>
+  <div class="scanlines" aria-hidden="true"></div>
 
   <script src="battledex-storage.js"></script>
   <script src="script.js"></script>

@@ -10,13 +10,13 @@ function renderBattledex({ animate = true } = {}) {
   const fighters = loadBattledex();
 
   const count = document.createElement('strong');
-  count.textContent = fighters.length;
-  rosterCount.replaceChildren(count, ` ${fighters.length === 1 ? 'fighter' : 'fighters'} on roster`);
+  count.textContent = String(fighters.length).padStart(3, '0');
+  rosterCount.replaceChildren('FIGHTERS ', count);
 
   grid.innerHTML = '';
   fighters.forEach((fighter, index) => {
     const card = document.createElement('figure');
-    card.className = 'dex-card';
+    card.className = 'dex-card chamfer';
     card.style.setProperty('--i', animate ? index : 0);
     if (!animate) card.style.animation = 'none';
 
@@ -55,7 +55,7 @@ function renderBattledex({ animate = true } = {}) {
 
     const no = document.createElement('span');
     no.className = 'dex-card-no';
-    no.textContent = `№ ${String(index + 1).padStart(3, '0')}`;
+    no.textContent = `#${String(index + 1).padStart(3, '0')}`;
 
     caption.append(name, no);
     card.append(deleteBtn, frame, caption);

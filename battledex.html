@@ -3,63 +3,76 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="theme-color" content="#08080a" />
+  <meta name="theme-color" content="#07060f" />
   <title>BattleDex — Battleground</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Press+Start+2P&family=Share+Tech+Mono&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="theme.css" />
   <link rel="stylesheet" href="battledex.css" />
 </head>
 <body>
-  <header class="dex-topbar">
-    <a class="dex-wordmark" href="index.html">Battle<span>ground</span></a>
-    <nav class="dex-nav" aria-label="Primary">
-      <a href="index.html">Arena</a>
-      <a href="battledex.html" aria-current="page">BattleDex</a>
+  <div class="neon-floor" aria-hidden="true"></div>
+
+  <header class="topbar">
+    <a class="wordmark" href="index.html">BATTLEGROUND</a>
+    <nav class="nav" aria-label="Main">
+      <a class="chamfer" href="index.html">ARENA</a>
+      <a class="chamfer" href="battledex.html" aria-current="page">BATTLEDEX</a>
     </nav>
   </header>
 
   <main class="dex-main">
     <section id="view-battledex" class="view-battledex">
       <div class="dex-hero">
-        <div>
-          <p class="dex-eyebrow">The Collection</p>
-          <h1 class="dex-title">Battle<em>Dex</em></h1>
-          <p class="dex-count" id="roster-count-text"><strong>0</strong> fighters on roster</p>
+        <div class="dex-heading">
+          <span class="eyebrow">◢ COLLECTION</span>
+          <h1 class="dex-title">BATTLEDEX</h1>
         </div>
-        <div class="dex-actions">
-          <button id="battledex-back-to-fight" type="button" class="btn btn-ghost" hidden>Last fight</button>
-          <a id="battledex-new-fight" href="index.html" class="btn btn-primary">New fight</a>
-        </div>
+        <p class="dex-count" id="roster-count-text">FIGHTERS <strong>000</strong></p>
+      </div>
+
+      <div class="dex-actions">
+        <button id="battledex-back-to-fight" type="button" class="btn btn-ghost chamfer" hidden>&lt;&lt; LAST FIGHT</button>
+        <a id="battledex-new-fight" href="index.html" class="btn btn-primary chamfer">NEW FIGHT &gt;&gt;</a>
       </div>
 
       <div id="battledex-grid" class="battledex-grid"></div>
 
       <div id="battledex-empty" class="battledex-empty" hidden>
-        <div class="empty-mark" aria-hidden="true">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5"/><rect x="3" y="14" width="7" height="7" rx="1.5"/><path d="M17.5 14v7M14 17.5h7"/></svg>
+        <div class="empty-panel chamfer">
+          <div class="empty-inner chamfer">
+            <div class="empty-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="square"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="9"/><rect x="3" y="15" width="7" height="6"/><path d="M17.5 14v7M14 17.5h7"/></svg>
+            </div>
+            <h2 class="empty-heading">NO FIGHTERS YET</h2>
+            <p>Win a fight and save the art to start building your roster.</p>
+            <a href="index.html" class="btn btn-primary chamfer">START A FIGHT</a>
+          </div>
         </div>
-        <h2 class="empty-heading">Your collection is empty</h2>
-        <p>Win a fight and save the art to start building your roster.</p>
-        <a href="index.html" class="btn btn-primary">Start a fight</a>
       </div>
 
       <div class="dex-footer-actions">
-        <button id="battledex-clear" type="button" class="btn btn-text" hidden>Clear collection</button>
+        <button id="battledex-clear" type="button" class="btn-text" hidden>[X] CLEAR COLLECTION</button>
       </div>
     </section>
   </main>
 
   <div id="confirm-overlay" class="confirm-overlay" hidden>
-    <div class="confirm-box" role="alertdialog" aria-modal="true" aria-labelledby="confirm-heading" aria-describedby="confirm-desc">
-      <h2 id="confirm-heading" class="confirm-heading">Clear your collection?</h2>
-      <p id="confirm-desc">Every saved fighter will be permanently deleted. This can't be undone.</p>
-      <div class="confirm-actions">
-        <button id="confirm-cancel" type="button" class="btn btn-ghost">Cancel</button>
-        <button id="confirm-delete" type="button" class="btn btn-danger">Delete all</button>
+    <div class="confirm-frame chamfer">
+      <div class="confirm-box chamfer" role="alertdialog" aria-modal="true" aria-labelledby="confirm-heading" aria-describedby="confirm-desc">
+        <span class="confirm-eyebrow">WARNING</span>
+        <h2 id="confirm-heading" class="confirm-heading">CLEAR YOUR COLLECTION?</h2>
+        <p id="confirm-desc">Every saved fighter will be permanently deleted. This can't be undone.</p>
+        <div class="confirm-actions">
+          <button id="confirm-cancel" type="button" class="btn chamfer">CANCEL</button>
+          <button id="confirm-delete" type="button" class="btn btn-danger chamfer">DELETE ALL</button>
+        </div>
       </div>
     </div>
   </div>
+
+  <div class="scanlines" aria-hidden="true"></div>
 
   <script src="battledex-storage.js"></script>
   <script src="battledex.js"></script>
