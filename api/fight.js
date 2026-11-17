@@ -37,7 +37,7 @@ class ImageGenerationError extends Error {}
 async function generateFighterImage(fighterText) {
   try {
     const result = await openai.images.generate({
-      model: 'gpt-image-1',
+      model: 'gpt-image-1.5',
       prompt: `A single character portrait representing: ${fighterText}. ${ART_STYLE_TEMPLATE}`,
       size: '1024x1024',
       n: 1,
