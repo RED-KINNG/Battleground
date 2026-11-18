@@ -2,6 +2,8 @@ const Anthropic = require('@anthropic-ai/sdk');
 const OpenAI = require('openai');
 const { z } = require('zod');
 const { zodOutputFormat } = require('@anthropic-ai/sdk/helpers/zod');
+const { Ratelimit } = require('@upstash/ratelimit');
+const { Redis } = require('@upstash/redis');
 // Helpers live in api/_lib/ — Vercel skips underscore-prefixed paths, so they don't become routes.
 const { JUDGE_SYSTEM_PROMPT } = require('./_lib/judge-prompt');
 const { ART_STYLE_TEMPLATE } = require('./_lib/art-style');
@@ -16,25 +18,19 @@ const VerdictSchema = z.object({
   reasoning: z.string(),
 });
 
-// ponytail: in-memory rate limit, per-instance only — resets on cold start and
-// isn't shared across concurrent serverless instances. Fine for local/single-
-// instance use; move to Vercel KV/Upstash if this needs to hold under real traffic.
-const RATE_LIMIT = 5;
-const WINDOW_MS = 60_000;
 const MAX_FIGHTER_LENGTH = 50;
-const hits = new Map(); // ip -> timestamps[]
 
-function isRateLimited(ip) {
-  const now = Date.now();
-  // Forget IPs whose most recent hit is outside the window, so the map doesn't grow forever.
-  for (const [key, ts] of hits) {
-    if (now - ts[ts.length - 1] >= WINDOW_MS) hits.delete(key);
-  }
-  const timestamps = (hits.get(ip) || []).filter((t) => now - t < WINDOW_MS);
-  timestamps.push(now);
-  hits.set(ip, timestamps);
-  return timestamps.length > RATE_LIMIT;
-}
+// 5 fights/minute per IP, counted in Upstash Redis so every serverless instance
+// shares one count (an in-memory counter resets per instance and per cold start).
+// Reads UPSTASH_REDIS_REST_URL/TOKEN (or Vercel's KV_REST_API_URL/TOKEN) from env.
+// If Redis doesn't answer within 1s the request is let through rather than
+// blocking every fight during an Upstash outage.
+const ratelimit = new Ratelimit({
+  redis: Redis.fromEnv(),
+  limiter: Ratelimit.slidingWindow(5, '60 s'),
+  prefix: 'battleground:fight',
+  timeout: 1000,
+});
 
 class ModerationBlockedError extends Error {}
 
@@ -70,7 +66,14 @@ module.exports = async function handler(req, res) {
 
   const ip = (req.headers['x-forwarded-for'] || '').split(',')[0].trim() || req.socket?.remoteAddress || 'unknown';
 
-  if (isRateLimited(ip)) {
+  let success = true;
+  try {
+    ({ success } = await ratelimit.limit(ip));
+  } catch (err) {
+    // Same fail-open policy as the timeout: a Redis error shouldn't take the whole app down.
+    console.error('Rate limit check failed, allowing request:', err);
+  }
+  if (!success) {
     res.status(429).json({ error: "Whoa there, champ — the arena needs a breather. Give it a minute and step back up." });
     return;
   }
