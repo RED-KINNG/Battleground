@@ -113,7 +113,7 @@
 - [ ] Full manual pass: empty inputs, one empty input, same fighter twice, very long names, non-English input
 - [ ] Confirm rate limiting doesn't fire on normal single-fight use
 - [ ] Confirm loading/error states cover: fight API failure (verdict or image side), rate limit hit, network offline
-- [ ] Deploy to Vercel
+- [x] Deploy to Vercel — live at https://battleground-blond.vercel.app, auto-deploys on push to `main` from RED-KINNG/Battleground
 
 **Done when:** app handles the MVP end to end without console errors, deployed to Vercel.
 
