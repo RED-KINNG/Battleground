@@ -1,12 +1,13 @@
 const CLOSE_ICON =
   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>';
 
+const grid = document.getElementById('battledex-grid');
+const empty = document.getElementById('battledex-empty');
+const clearBtn = document.getElementById('battledex-clear');
+const rosterCount = document.getElementById('roster-count-text');
+const confirmOverlay = document.getElementById('confirm-overlay');
+
 function renderBattledex({ animate = true } = {}) {
-  const grid = document.getElementById('battledex-grid');
-  const empty = document.getElementById('battledex-empty');
-  const clearBtn = document.getElementById('battledex-clear');
-  const backBtn = document.getElementById('battledex-back-to-fight');
-  const rosterCount = document.getElementById('roster-count-text');
   const fighters = loadBattledex();
 
   const count = document.createElement('strong');
@@ -22,7 +23,7 @@ function renderBattledex({ animate = true } = {}) {
 
     const deleteBtn = document.createElement('button');
     deleteBtn.type = 'button';
-    deleteBtn.className = 'dex-card-delete';
+    deleteBtn.className = 'dex-card-delete chamfer';
     deleteBtn.innerHTML = CLOSE_ICON;
     deleteBtn.setAttribute('aria-label', `Remove ${fighter.label}`);
     deleteBtn.addEventListener('click', () => {
@@ -64,15 +65,7 @@ function renderBattledex({ animate = true } = {}) {
 
   empty.hidden = fighters.length > 0;
   clearBtn.hidden = fighters.length === 0;
-  backBtn.hidden = !loadLastFight();
 }
-
-document.getElementById('battledex-back-to-fight').addEventListener('click', () => {
-  location.href = 'index.html?view=result';
-});
-
-const confirmOverlay = document.getElementById('confirm-overlay');
-const clearBtn = document.getElementById('battledex-clear');
 
 function openConfirm() {
   confirmOverlay.hidden = false;
@@ -101,4 +94,6 @@ document.getElementById('confirm-delete').addEventListener('click', () => {
   renderBattledex();
 });
 
+// Nothing on this page changes lastFight, so check it once rather than on every render.
+document.getElementById('battledex-back-to-fight').hidden = !loadLastFight();
 renderBattledex();

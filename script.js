@@ -129,10 +129,14 @@ async function runFight(fighterA, fighterB) {
   rememberLastFight(fight);
 }
 
+const inputA = document.getElementById('fighter-a');
+const inputB = document.getElementById('fighter-b');
+const fightBtn = document.querySelector('.fight-btn');
+
 document.getElementById('fight-form').addEventListener('submit', (e) => {
   e.preventDefault();
-  const fighterA = document.getElementById('fighter-a').value.trim();
-  const fighterB = document.getElementById('fighter-b').value.trim();
+  const fighterA = inputA.value.trim();
+  const fighterB = inputB.value.trim();
   if (!fighterA || !fighterB) {
     showError("Can't have a fight with an empty corner — enter both fighters.");
     return;
@@ -141,13 +145,14 @@ document.getElementById('fight-form').addEventListener('submit', (e) => {
 });
 
 function updateFormReadiness() {
-  const ready = document.getElementById('fighter-a').value.trim() && document.getElementById('fighter-b').value.trim();
-  document.getElementById('view-form').classList.toggle('ready', ready);
+  const ready = Boolean(inputA.value.trim() && inputB.value.trim());
+  views.form.classList.toggle('ready', ready);
+  fightBtn.classList.toggle('btn-primary', ready);
   document.getElementById('form-tagline').textContent = ready ? 'READY TO FIGHT' : 'SELECT YOUR FIGHTERS';
   document.getElementById('form-hint').textContent = ready ? 'PRESS TO BEGIN' : 'BOTH SLOTS REQUIRED';
 }
-document.getElementById('fighter-a').addEventListener('input', updateFormReadiness);
-document.getElementById('fighter-b').addEventListener('input', updateFormReadiness);
+inputA.addEventListener('input', updateFormReadiness);
+inputB.addEventListener('input', updateFormReadiness);
 
 document.getElementById('result-again').addEventListener('click', () => showView('form'));
 document.getElementById('error-again').addEventListener('click', () => showView('form'));

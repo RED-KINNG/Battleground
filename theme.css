@@ -228,8 +228,9 @@ button {
   transform: translateY(2px);
 }
 
-.btn[hidden] {
-  display: none;
+/* The hidden attribute must win over any display rule (.btn, .view, overlays, etc.). */
+[hidden] {
+  display: none !important;
 }
 
 .btn-primary {
