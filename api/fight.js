@@ -9,8 +9,10 @@ const { ART_STYLE_TEMPLATE } = require('./_lib/art-style');
 const anthropic = new Anthropic(); // reads ANTHROPIC_API_KEY from env
 const openai = new OpenAI(); // reads OPENAI_API_KEY from env
 
+// The model picks a side label rather than echoing fighter text, so the winner is
+// unambiguous even when both fighters have identical names ("cow" vs "cow").
 const VerdictSchema = z.object({
-  winner: z.string(),
+  winner: z.enum(['A', 'B']),
   reasoning: z.string(),
 });
 
@@ -60,15 +62,6 @@ async function generateFighterImage(fighterText) {
   return `data:image/png;base64,${b64}`;
 }
 
-// The model should echo one input verbatim; tolerate case/whitespace drift by
-// snapping back to the exact input text. Returns null if it named neither fighter.
-function matchWinner(winner, fighterA, fighterB) {
-  const norm = (s) => s.trim().toLowerCase();
-  if (norm(winner) === norm(fighterA)) return fighterA;
-  if (norm(winner) === norm(fighterB)) return fighterB;
-  return null;
-}
-
 module.exports = async function handler(req, res) {
   if (req.method !== 'POST') {
     res.status(405).json({ error: 'Method not allowed' });
@@ -105,12 +98,12 @@ module.exports = async function handler(req, res) {
         { role: 'user', content: `Fighter A: ${fighterA}\nFighter B: ${fighterB}` },
       ],
     });
-    const winner = response.parsed_output && matchWinner(response.parsed_output.winner, fighterA, fighterB);
-    if (!winner) {
+    if (!response.parsed_output) {
       res.status(502).json({ error: "The judge stared into the void and couldn't call it. Try again." });
       return;
     }
-    verdict = { ...response.parsed_output, winner };
+    const { winner: winnerSide, reasoning } = response.parsed_output;
+    verdict = { winner: winnerSide === 'A' ? fighterA : fighterB, winnerSide, reasoning };
   } catch (err) {
     console.error('Verdict call failed:', err);
     res.status(502).json({ error: "The judge stepped out mid-fight. Give it another shot." });

@@ -74,9 +74,10 @@ function rememberLastFight(fight) {
 }
 
 function showResult(fight) {
-  const { winner, reasoning, imageA, imageB, fighterA, fighterB } = fight;
+  const { winner, winnerSide, reasoning, imageA, imageB, fighterA, fighterB } = fight;
   currentFight = fight;
-  const aWins = winner === fighterA;
+  // winnerSide is authoritative (names can be identical); a lastFight saved before it existed falls back to name matching.
+  const aWins = winnerSide ? winnerSide === 'A' : winner === fighterA;
   document.getElementById('result-winner').textContent = `${winner} wins!`;
   document.getElementById('result-reasoning').textContent = reasoning;
   document.getElementById('result-image-a').src = imageA;
@@ -119,6 +120,7 @@ async function runFight(fighterA, fighterB) {
 
   const fight = {
     winner: data.winner,
+    winnerSide: data.winnerSide,
     reasoning: data.reasoning,
     imageA: data.imageA,
     imageB: data.imageB,
