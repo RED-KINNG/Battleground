@@ -23,10 +23,6 @@ body:has(#view-result:not([hidden])) { --floor: var(--cyan); }
   gap: 14px;
 }
 
-.view[hidden] {
-  display: none;
-}
-
 /* Per-player accents: 1P cyan, 2P pink. */
 .p1 {
   --accent: var(--cyan);
@@ -222,21 +218,11 @@ body:has(#view-result:not([hidden])) { --floor: var(--cyan); }
   margin-top: 10px;
   min-height: 62px;
   font-size: 18px;
+}
+
+/* Dimmed until both fighters are entered; script.js then adds .btn-primary. */
+.fight-btn:not(.btn-primary) {
   color: var(--faint);
-}
-
-#view-form.ready .fight-btn {
-  background: var(--yellow);
-  color: var(--bg);
-  box-shadow: inset 0 -5px 0 rgba(0, 0, 0, 0.25);
-}
-
-#view-form.ready .fight-btn:hover {
-  background: #ffea80;
-}
-
-#view-form.ready .fight-btn:focus-visible {
-  box-shadow: inset 0 0 0 3px var(--bg);
 }
 
 .hint {

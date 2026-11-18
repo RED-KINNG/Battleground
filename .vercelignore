@@ -1,5 +1,5 @@
-# vercel.json serves the project root as static files, so anything not
-# listed here is publicly reachable on the deployed site.
+# Only public/ is served as static files (vercel.json outputDirectory); api/ is
+# deployed as functions. This file keeps everything else out of the upload entirely.
 
 # Secrets and local tooling
 .env*

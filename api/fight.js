@@ -2,14 +2,17 @@ const Anthropic = require('@anthropic-ai/sdk');
 const OpenAI = require('openai');
 const { z } = require('zod');
 const { zodOutputFormat } = require('@anthropic-ai/sdk/helpers/zod');
-const { JUDGE_SYSTEM_PROMPT } = require('./judge-prompt');
-const { ART_STYLE_TEMPLATE } = require('./art-style');
+// Helpers live in api/_lib/ — Vercel skips underscore-prefixed paths, so they don't become routes.
+const { JUDGE_SYSTEM_PROMPT } = require('./_lib/judge-prompt');
+const { ART_STYLE_TEMPLATE } = require('./_lib/art-style');
 
 const anthropic = new Anthropic(); // reads ANTHROPIC_API_KEY from env
 const openai = new OpenAI(); // reads OPENAI_API_KEY from env
 
+// The model picks a side label rather than echoing fighter text, so the winner is
+// unambiguous even when both fighters have identical names ("cow" vs "cow").
 const VerdictSchema = z.object({
-  winner: z.string(),
+  winner: z.enum(['A', 'B']),
   reasoning: z.string(),
 });
 
@@ -23,6 +26,10 @@ const hits = new Map(); // ip -> timestamps[]
 
 function isRateLimited(ip) {
   const now = Date.now();
+  // Forget IPs whose most recent hit is outside the window, so the map doesn't grow forever.
+  for (const [key, ts] of hits) {
+    if (now - ts[ts.length - 1] >= WINDOW_MS) hits.delete(key);
+  }
   const timestamps = (hits.get(ip) || []).filter((t) => now - t < WINDOW_MS);
   timestamps.push(now);
   hits.set(ip, timestamps);
@@ -30,28 +37,29 @@ function isRateLimited(ip) {
 }
 
 class ModerationBlockedError extends Error {}
-class ImageGenerationError extends Error {}
 
 // One image per fighter, whatever the input ("10 cows" still gets one image,
 // not ten) — that's on the model to honor from the prompt text itself.
 async function generateFighterImage(fighterText) {
+  let result;
   try {
-    const result = await openai.images.generate({
+    result = await openai.images.generate({
       model: 'gpt-image-1.5',
       prompt: `A single character portrait representing: ${fighterText}. ${ART_STYLE_TEMPLATE}`,
       size: '1024x1024',
       n: 1,
     });
-    const b64 = result.data?.[0]?.b64_json;
-    if (!b64) throw new ImageGenerationError('No image returned');
-    return `data:image/png;base64,${b64}`;
   } catch (err) {
+    // Only moderation blocks need translating; anything else propagates with its original details.
     const code = err?.code || err?.error?.code;
     if (code === 'moderation_blocked' || code === 'content_policy_violation') {
       throw new ModerationBlockedError(fighterText);
     }
-    throw new ImageGenerationError(err?.message || 'Image generation failed');
+    throw err;
   }
+  const b64 = result.data?.[0]?.b64_json;
+  if (!b64) throw new Error('No image returned');
+  return `data:image/png;base64,${b64}`;
 }
 
 module.exports = async function handler(req, res) {
@@ -67,7 +75,9 @@ module.exports = async function handler(req, res) {
     return;
   }
 
-  const { fighterA, fighterB } = req.body || {};
+  const body = req.body || {};
+  const fighterA = typeof body.fighterA === 'string' ? body.fighterA.trim() : '';
+  const fighterB = typeof body.fighterB === 'string' ? body.fighterB.trim() : '';
   if (!fighterA || !fighterB) {
     res.status(400).json({ error: "Can't have a fight with an empty corner — enter both fighters." });
     return;
@@ -92,7 +102,8 @@ module.exports = async function handler(req, res) {
       res.status(502).json({ error: "The judge stared into the void and couldn't call it. Try again." });
       return;
     }
-    verdict = response.parsed_output;
+    const { winner: winnerSide, reasoning } = response.parsed_output;
+    verdict = { winner: winnerSide === 'A' ? fighterA : fighterB, winnerSide, reasoning };
   } catch (err) {
     console.error('Verdict call failed:', err);
     res.status(502).json({ error: "The judge stepped out mid-fight. Give it another shot." });
