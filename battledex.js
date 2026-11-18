@@ -30,7 +30,7 @@ function renderBattledex({ animate = true } = {}) {
       const remove = () => {
         if (done) return;
         done = true;
-        deleteFighter(index);
+        deleteFighter(fighter);
         renderBattledex({ animate: false });
       };
       card.classList.add('is-removing');

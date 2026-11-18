@@ -41,8 +41,13 @@ async function saveFighter(label, image) {
   saveBattledex(fighters);
 }
 
-function deleteFighter(index) {
+// Matched by content, not position: the list can shift between render and delete
+// (e.g. two quick deletes), and a stale index would remove the wrong fighter.
+// Entries with the same label and image are interchangeable, so removing either is fine.
+function deleteFighter(fighter) {
   const fighters = loadBattledex();
+  const index = fighters.findIndex((f) => f.label === fighter.label && f.image === fighter.image);
+  if (index === -1) return;
   fighters.splice(index, 1);
   saveBattledex(fighters);
 }
